@@ -220,7 +220,9 @@
                             }
                             @if(userTypes == "4") {
                                 <a href="@routes.RAJobController.rajobListAppliedByUser(1)" class="btn waves-effect waves-light blue darken-2">
-                                Back to Applied RA Job List</a>
+                                    Back to Applied RA Job List</a>
+                                <a href="@routes.InterviewRequestController.interviewList(rajobApplication.getId())" class="btn waves-effect waves-light green darken-2">
+                                    <i class="material-icons left">event_note</i>View Interview Requests</a>
                             }
                         </form>
                     </div>

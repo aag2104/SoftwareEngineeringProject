@@ -1,0 +1,201 @@
+@(request: models.InterviewRequest)
+
+@main("Interview Request Detail") {
+    <div class="container">
+        <div class="row">
+            <div class="card-panel">
+
+                <h4 class="center">Interview Request</h4>
+
+                @if(flash.containsKey("success")) {
+                    <div class="card-panel green lighten-4 green-text text-darken-4">
+                        <i class="material-icons small">check_circle</i>
+                        @flash.get("success")
+                    </div>
+                }
+                @if(flash.containsKey("error")) {
+                    <div class="card-panel red lighten-4 red-text text-darken-4">
+                        <i class="material-icons small">error</i>
+                        @flash.get("error")
+                    </div>
+                }
+
+                    <!-- Status Banner -->
+                <div class="center" style="margin-bottom: 24px;">
+                @request.getStatus() match {
+                    case "PENDING"   => {
+                        <span class="chip orange white-text" style="font-size:1rem; padding: 0 16px;">
+                            <i class="material-icons small">hourglass_empty</i> Awaiting Your Response
+                        </span>
+                    }
+                    case "ACCEPTED"  => {
+                        <span class="chip green white-text" style="font-size:1rem; padding: 0 16px;">
+                            <i class="material-icons small">check</i> Accepted
+                        </span>
+                    }
+                    case "COUNTERED" => {
+                        <span class="chip blue white-text" style="font-size:1rem; padding: 0 16px;">
+                            <i class="material-icons small">swap_horiz</i> Counter-Offer Sent
+                        </span>
+                    }
+                    case "CONFIRMED" => {
+                        <span class="chip teal white-text" style="font-size:1rem; padding: 0 16px;">
+                            <i class="material-icons small">event_available</i> Confirmed
+                        </span>
+                    }
+                    case "CANCELLED" => {
+                        <span class="chip red white-text" style="font-size:1rem; padding: 0 16px;">
+                            <i class="material-icons small">cancel</i> Cancelled
+                        </span>
+                    }
+                    case _ => {
+                        <span class="chip grey white-text" style="font-size:1rem; padding: 0 16px;">
+                        @request.getStatus()
+                        </span>
+                    }
+                }
+                </div>
+
+                    <!-- Details Table -->
+                <table class="striped">
+                    <tbody>
+                        <tr>
+                            <td><strong>Faculty</strong></td>
+                            <td>@request.getFacultyName()</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Location</strong></td>
+                            <td>@if(request.getLocation() != null && !request.getLocation().isEmpty) { @request.getLocation() } else { - }</td>
+                        </tr>
+                        @if(request.getMeetingLink() != null && !request.getMeetingLink().isEmpty) {
+                            <tr>
+                                <td><strong>Meeting Link</strong></td>
+                                <td><a href="@request.getMeetingLink()" target="_blank">@request.getMeetingLink()</a></td>
+                            </tr>
+                        }
+                        @if(request.getNotes() != null && !request.getNotes().isEmpty) {
+                            <tr>
+                                <td><strong>Notes from Faculty</strong></td>
+                                <td>@request.getNotes()</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><strong>Received</strong></td>
+                            <td>@request.getCreateTime()</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                    <!-- Proposed Slots (shown when PENDING) -->
+                @if(request.getStatus() == "PENDING") {
+                    <div class="card-panel blue lighten-5" style="margin-top: 24px;">
+                        <h5><i class="material-icons">date_range</i> Choose a Proposed Time Slot</h5>
+                        <p class="grey-text">Select one of the time slots proposed by the faculty, or propose your own alternative.</p>
+
+                        <form action="@routes.InterviewRequestController.acceptSlotPOST(request.getId())" method="POST">
+                            @helper.CSRF.formField
+
+                            @if(request.getProposedSlot1() != null && !request.getProposedSlot1().isEmpty) {
+                                <p>
+                                    <label>
+                                        <input type="radio" name="chosenSlot" value="@request.getProposedSlot1()" required/>
+                                        <span><i class="material-icons tiny">schedule</i> @request.getProposedSlot1()</span>
+                                    </label>
+                                </p>
+                            }
+                            @if(request.getProposedSlot2() != null && !request.getProposedSlot2().isEmpty) {
+                                <p>
+                                    <label>
+                                        <input type="radio" name="chosenSlot" value="@request.getProposedSlot2()"/>
+                                        <span><i class="material-icons tiny">schedule</i> @request.getProposedSlot2()</span>
+                                    </label>
+                                </p>
+                            }
+                            @if(request.getProposedSlot3() != null && !request.getProposedSlot3().isEmpty) {
+                                <p>
+                                    <label>
+                                        <input type="radio" name="chosenSlot" value="@request.getProposedSlot3()"/>
+                                        <span><i class="material-icons tiny">schedule</i> @request.getProposedSlot3()</span>
+                                    </label>
+                                </p>
+                            }
+
+                            <div style="margin-top: 16px;">
+                                <button type="submit" class="btn green waves-effect waves-light">
+                                    <i class="material-icons left">check</i>Accept Selected Slot
+                                </button>
+                                <a href="@routes.InterviewRequestController.counterOfferPage(request.getId())"
+                                class="btn blue waves-effect waves-light" style="margin-left: 12px;">
+                                    <i class="material-icons left">swap_horiz</i>Propose Alternative Time
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                }
+
+                    <!-- Accepted Slot Info -->
+                @if(request.getAcceptedSlot() != null && !request.getAcceptedSlot().isEmpty) {
+                    <div class="card-panel green lighten-5" style="margin-top: 24px;">
+                        <h5><i class="material-icons">event_available</i> Confirmed Interview Time</h5>
+                        <p><strong>@request.getAcceptedSlot()</strong></p>
+                        <p class="grey-text">You will receive reminder notifications 24 hours and 1 hour before your interview.</p>
+                    </div>
+                }
+
+                    <!-- Counter-offer info -->
+                @if(request.getCounterSlot() != null && !request.getCounterSlot().isEmpty) {
+                    <div class="card-panel blue lighten-5" style="margin-top: 24px;">
+                        <h5><i class="material-icons">swap_horiz</i> Your Counter-Offer</h5>
+                        <p><strong>Proposed time:</strong> @request.getCounterSlot()</p>
+                        @if(request.getCounterNote() != null && !request.getCounterNote().isEmpty) {
+                            <p><strong>Note:</strong> @request.getCounterNote()</p>
+                        }
+                        <p class="grey-text">Waiting for faculty to review your counter-offer.</p>
+                    </div>
+                }
+
+                    <!-- Cancel Section -->
+                @if(request.getStatus() == "ACCEPTED" || request.getStatus() == "CONFIRMED") {
+                    <div class="card-panel red lighten-5" style="margin-top: 24px;">
+                        <h5><i class="material-icons">cancel</i> Cancel Interview</h5>
+                        <p class="grey-text">
+                            You may cancel up to <strong>@request.getCancelWindowHours() hours</strong> before your interview.
+                        </p>
+                        <form action="@routes.InterviewRequestController.cancelInterviewPOST(request.getId())" method="POST">
+                            @helper.CSRF.formField
+                            <div class="input-field">
+                                <textarea id="cancelReason" name="cancelReason" class="materialize-textarea" maxlength="500"></textarea>
+                                <label for="cancelReason">Reason for cancellation (optional)</label>
+                            </div>
+                            <button type="submit" class="btn red waves-effect waves-light"
+                            onclick="return confirm('Are you sure you want to cancel this interview?')">
+                                <i class="material-icons left">cancel</i>Cancel Interview
+                            </button>
+                        </form>
+                    </div>
+                }
+
+                    <!-- Cancellation record -->
+                @if(request.getStatus() == "CANCELLED") {
+                    <div class="card-panel red lighten-5" style="margin-top: 24px;">
+                        <h5><i class="material-icons">cancel</i> This interview was cancelled</h5>
+                        <p><strong>Cancelled by:</strong> @request.getCancelledBy()</p>
+                        <p><strong>Time:</strong> @request.getCancelledTime()</p>
+                        @if(request.getCancelReason() != null && !request.getCancelReason().isEmpty) {
+                            <p><strong>Reason:</strong> @request.getCancelReason()</p>
+                        }
+                    </div>
+                }
+
+                    <!-- Back button -->
+                <div class="center" style="margin-top: 24px;">
+                    <a href="@routes.InterviewRequestController.interviewList(request.getRaJobApplicationId())"
+                    class="btn grey waves-effect waves-light">
+                        <i class="material-icons left">arrow_back</i>Back to Interview Requests
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

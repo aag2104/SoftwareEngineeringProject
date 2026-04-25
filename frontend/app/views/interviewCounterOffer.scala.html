@@ -1,0 +1,65 @@
+@(request: models.InterviewRequest)
+
+@main("Propose Alternative Interview Time") {
+    <div class="container">
+        <div class="row">
+            <div class="card-panel">
+
+                <h4 class="center">Propose an Alternative Time</h4>
+                <p class="center grey-text">
+                    None of the proposed slots work for you? Enter a time that works better.
+                    The faculty will be notified and can confirm or propose new slots.
+                </p>
+
+                @if(flash.containsKey("success"))  {
+                    <div class="card-panel red lighten-4 red-text text-darken-4">
+                        <i class="material-icons small">error</i>
+                        @flash.get("error")
+                    </div>
+                }
+
+                    <!-- Show original proposed slots for reference -->
+                <div class="card-panel blue lighten-5">
+                    <h6><i class="material-icons small">date_range</i> Original Proposed Slots</h6>
+                    @if(request.getProposedSlot1() != null && !request.getProposedSlot1().isEmpty) {
+                        <p><i class="material-icons tiny">schedule</i> @request.getProposedSlot1()</p>
+                    }
+                    @if(request.getProposedSlot2() != null && !request.getProposedSlot2().isEmpty) {
+                        <p><i class="material-icons tiny">schedule</i> @request.getProposedSlot2()</p>
+                    }
+                    @if(request.getProposedSlot3() != null && !request.getProposedSlot3().isEmpty) {
+                        <p><i class="material-icons tiny">schedule</i> @request.getProposedSlot3()</p>
+                    }
+                </div>
+
+                <form action="@routes.InterviewRequestController.counterOfferPOST(request.getId())" method="POST">
+                    @helper.CSRF.formField
+
+                    <div class="input-field">
+                        <input type="datetime-local" id="counterSlot" name="counterSlot" required
+                        class="validate"/>
+                        <label for="counterSlot">Your Proposed Date &amp; Time</label>
+                    </div>
+
+                    <div class="input-field">
+                        <textarea id="counterNote" name="counterNote"
+                        class="materialize-textarea" maxlength="500"></textarea>
+                        <label for="counterNote">Additional Note (optional, e.g. time zone, constraints)</label>
+                    </div>
+
+                    <div class="row center" style="margin-top: 24px;">
+                        <button type="submit" class="btn blue waves-effect waves-light">
+                            <i class="material-icons left">send</i>Submit Counter-Offer
+                        </button>
+                        <a href="@routes.InterviewRequestController.interviewDetail(request.getId())"
+                        class="btn grey waves-effect waves-light" style="margin-left: 12px;">
+                            <i class="material-icons left">arrow_back</i>Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+}

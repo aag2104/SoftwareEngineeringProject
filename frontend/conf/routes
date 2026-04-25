@@ -307,6 +307,18 @@ POST        /rajob/sendOfferEmail                                               
 
 ########################################################## RAJobs #####################################################################
 
+########################################## InterviewRequest (F2) #######################################################
+GET           /interview/list/:applicationId                                                      controllers.InterviewRequestController.interviewList(applicationId: Long)
+GET           /interview/myInterviews                                                             controllers.InterviewRequestController.myInterviews()
+GET           /interview/detail/:id                                                               controllers.InterviewRequestController.interviewDetail(id: Long)
+POST          /interview/accept/:id                                                               controllers.InterviewRequestController.acceptSlotPOST(id: Long)
+GET           /interview/counterPage/:id                                                          controllers.InterviewRequestController.counterOfferPage(id: Long)
+POST          /interview/counter/:id                                                              controllers.InterviewRequestController.counterOfferPOST(id: Long)
+POST          /interview/cancel/:id                                                               controllers.InterviewRequestController.cancelInterviewPOST(id: Long)
+######################################### InterviewRequest (F2) ########################################################
+
+
+
 ########################################################## TACandidate ################################################################
 
 GET         /tapool/tacandidateRegisterPage                                                            controllers.TACandidateController.tacandidateRegisterPage()
