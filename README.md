@@ -82,7 +82,7 @@ email {
 - `POST /interview/counter/:id` - Submit counter-offer
 - `POST /interview/cancel/:id` - Cancel interview
 
-**Documentation**: See [docs/features/f2.md](docs&features/f2.md) for comprehensive feature documentation.
+**Documentation**: See [docs/features/f2.md](docs_features/f2.md) for comprehensive feature documentation.
 
 **Testing**: Run tests with `sbt test` in backend directory. Current coverage: Unit tests, integration tests, and E2E test scenarios.
 
