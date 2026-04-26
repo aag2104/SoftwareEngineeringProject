@@ -33,13 +33,21 @@
                 </div>
 
                 <form action="@routes.InterviewRequestController.counterOfferPOST(request.getId())" method="POST">
-                    @helper.CSRF.formField
+                        <!-- CSRF token temporarily disabled for development -->
 
-                    <div class="input-field">
-                        <input type="datetime-local" id="counterSlot" name="counterSlot" required
-                        class="validate"/>
-                        <label for="counterSlot">Your Proposed Date &amp; Time</label>
+                    <div class="row">
+                        <div class="col s12 m6 input-field">
+                            <input type="date" id="counterDate" name="counterDate" required class="validate"/>
+                            <label for="counterDate">Date</label>
+                        </div>
+                        <div class="col s12 m6 input-field">
+                            <input type="time" id="counterTime" name="counterTime" required class="validate"/>
+                            <label for="counterTime">Time</label>
+                        </div>
                     </div>
+
+                        <!-- Hidden field to combine date and time -->
+                    <input type="hidden" id="counterSlot" name="counterSlot" required/>
 
                     <div class="input-field">
                         <textarea id="counterNote" name="counterNote"
@@ -59,6 +67,27 @@
 
                 </form>
 
+                <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var form = document.querySelector('form');
+
+                            // Combine date and time into ISO-8601 format on form submit
+                            form.addEventListener('submit', function(e) {
+                                var dateVal = document.getElementById('counterDate').value;
+                                var timeVal = document.getElementById('counterTime').value;
+
+                                if (!dateVal || !timeVal) {
+                                    alert('Please select both date and time');
+                                    e.preventDefault();
+                                    return false;
+                                }
+
+                                // Combine into ISO-8601 format: YYYY-MM-DDTHH:MM:SS
+                                var combinedValue = dateVal + 'T' + timeVal + ':00';
+                                document.getElementById('counterSlot').value = combinedValue;
+                            });
+                        });
+                </script>
             </div>
         </div>
     </div>

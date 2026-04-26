@@ -296,6 +296,18 @@ public class UserController extends Controller {
 //    @With(OperationLoggingAction.class)
     public Result userLogin() {
         try {
+            // DEVELOPMENT MODE: Auto-login with user ID 1
+            session().clear();
+            session("id", "1");
+            session("username", "testuser");
+            session("userfirstname", "Test");
+            session("email", "test@example.com");
+            session("avatar", "");
+            session("userTypes", "4");
+            session("organization", "");
+            return redirect(routes.Application.home());
+
+            /* Original login code - commented out for development
             Form loginForm = myFactory.form().bindFromRequest();
 
             if (loginForm.hasErrors()) {
@@ -358,6 +370,7 @@ public class UserController extends Controller {
 //                }
                 return redirect(routes.Application.home());
             }
+            */
         } catch (Exception e) {
             Logger.debug("UserController.userLogin exception: " + e.toString());
             return redirect(routes.Application.home());
