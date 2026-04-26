@@ -4,6 +4,7 @@ import java.time.Clock;
 import services.ApplicationTimer;
 import services.AtomicCounter;
 import services.Counter;
+import services.ReminderSchedulerService;
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -26,6 +27,9 @@ public class Module extends AbstractModule {
         bind(ApplicationTimer.class).asEagerSingleton();
         // Set AtomicCounter as the implementation for Counter.
         bind(Counter.class).to(AtomicCounter.class);
+        // Start the interview reminder scheduler as an eager singleton
+        bind(ReminderSchedulerService.class).asEagerSingleton();
     }
 
 }
+

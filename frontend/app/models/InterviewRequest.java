@@ -46,6 +46,10 @@ public class InterviewRequest {
     private String isActive;
     private int cancelWindowHours;
 
+    // Reminders
+    private String reminder24hSentTime;
+    private String reminder1hSentTime;
+
     // ── Getters & Setters ─────────────────────────────────────────────────────
 
     public long getId() { return id; }
@@ -117,6 +121,12 @@ public class InterviewRequest {
     public int getCancelWindowHours() { return cancelWindowHours; }
     public void setCancelWindowHours(int cancelWindowHours) { this.cancelWindowHours = cancelWindowHours; }
 
+    public String getReminder24hSentTime() { return reminder24hSentTime; }
+    public void setReminder24hSentTime(String reminder24hSentTime) { this.reminder24hSentTime = reminder24hSentTime; }
+
+    public String getReminder1hSentTime() { return reminder1hSentTime; }
+    public void setReminder1hSentTime(String reminder1hSentTime) { this.reminder1hSentTime = reminder1hSentTime; }
+
     // ── Deserializers ─────────────────────────────────────────────────────────
 
     /**
@@ -143,6 +153,8 @@ public class InterviewRequest {
         ir.setUpdateTime(json.path("updateTime").asText(""));
         ir.setIsActive(json.path("isActive").asText("True"));
         ir.setCancelWindowHours(json.path("cancelWindowHours").asInt(24));
+        ir.setReminder24hSentTime(json.path("reminder24hSentTime").asText(""));
+        ir.setReminder1hSentTime(json.path("reminder1hSentTime").asText(""));
 
         // Nested objects
         JsonNode faculty = json.path("faculty");

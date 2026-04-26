@@ -17,7 +17,6 @@ libraryDependencies += guice
 libraryDependencies += "commons-codec" % "commons-codec" % "1.17.1"
 // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
 libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3" % "1.12.772"
-
 libraryDependencies ++= Seq(
   javaJdbc,
   javaWs

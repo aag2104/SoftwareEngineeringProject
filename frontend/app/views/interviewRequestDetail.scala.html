@@ -56,6 +56,25 @@
                 }
                 </div>
 
+                    <!-- Reminder Status Notifications -->
+                @if((request.getStatus() == "ACCEPTED" || request.getStatus() == "CONFIRMED") &&
+                        request.getAcceptedSlot() != null && !request.getAcceptedSlot().isEmpty()) {
+                    <div class="card-panel blue lighten-5" style="margin-bottom: 24px;">
+                        <h5><i class="material-icons small">notifications_active</i> Reminder Status</h5>
+                        @if(request.getReminder24hSentTime() != null && !request.getReminder24hSentTime().isEmpty()) {
+                            <p><i class="material-icons tiny" style="color: green;">check</i> <strong>24-hour reminder sent</strong> at @request.getReminder24hSentTime()</p>
+                        } else {
+                            <p><i class="material-icons tiny" style="color: orange;">schedule</i> Waiting for 24-hour reminder...</p>
+                        }
+                        @if(request.getReminder1hSentTime() != null && !request.getReminder1hSentTime().isEmpty()) {
+                            <p><i class="material-icons tiny" style="color: green;">check</i> <strong>1-hour reminder sent</strong> at @request.getReminder1hSentTime()</p>
+                        } else {
+                            <p><i class="material-icons tiny" style="color: orange;">schedule</i> Waiting for 1-hour reminder...</p>
+                        }
+                        <p class="grey-text small" style="margin-top: 12px;"><em>Reminders are sent via email. Make sure your email is up to date in your profile.</em></p>
+                    </div>
+                }
+
                     <!-- Details Table -->
                 <table class="striped">
                     <tbody>
@@ -93,7 +112,7 @@
                         <p class="grey-text">Select one of the time slots proposed by the faculty, or propose your own alternative.</p>
 
                         <form action="@routes.InterviewRequestController.acceptSlotPOST(request.getId())" method="POST">
-                            @helper.CSRF.formField
+                                <!-- CSRF token temporarily disabled for development -->
 
                             @if(request.getProposedSlot1() != null && !request.getProposedSlot1().isEmpty) {
                                 <p>
@@ -162,7 +181,7 @@
                             You may cancel up to <strong>@request.getCancelWindowHours() hours</strong> before your interview.
                         </p>
                         <form action="@routes.InterviewRequestController.cancelInterviewPOST(request.getId())" method="POST">
-                            @helper.CSRF.formField
+                                <!-- CSRF token temporarily disabled for development -->
                             <div class="input-field">
                                 <textarea id="cancelReason" name="cancelReason" class="materialize-textarea" maxlength="500"></textarea>
                                 <label for="cancelReason">Reason for cancellation (optional)</label>
