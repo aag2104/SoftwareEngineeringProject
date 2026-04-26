@@ -207,6 +207,18 @@ GET           /rajob/professors                                                 
 
 ######################################### RAJob ########################################################################
 
+########################################## InterviewRequest (F2) #######################################################
+POST          /interview/add                                                                      controllers.InterviewRequestController.addInterviewRequest()
+GET           /interview/detail/:id                                                               controllers.InterviewRequestController.getInterviewRequestById(id: Long)
+GET           /interview/byApplication/:applicationId                                             controllers.InterviewRequestController.getByApplication(applicationId: Long)
+GET           /interview/byStudent/:studentId                                                     controllers.InterviewRequestController.getByStudent(studentId: Long)
+POST          /interview/accept/:id                                                               controllers.InterviewRequestController.acceptSlot(id: Long)
+POST          /interview/counter/:id                                                              controllers.InterviewRequestController.counterOffer(id: Long)
+POST          /interview/cancel/:id                                                               controllers.InterviewRequestController.cancelInterview(id: Long)
+POST          /interview/reminder24h/:id                                                          controllers.InterviewRequestController.markReminder24h(id: Long)
+POST          /interview/reminder1h/:id                                                           controllers.InterviewRequestController.markReminder1h(id: Long)
+######################################### InterviewRequest (F2) ########################################################
+
 ########################################## TAJob #######################################################################
 POST          /tajob/addTAJob                                                                             controllers.TAJobController.addTAJob()
 POST          /tajob/updateTAJob/:tajobId                                                                 controllers.TAJobController.updateTAJob(tajobId: Long)
