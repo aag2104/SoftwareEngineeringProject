@@ -1,0 +1,101 @@
+@(requests: java.util.List[models.InterviewRequest], applicationId: Long)
+@import scala.collection.JavaConverters._
+
+@main("My Interview Requests") {
+    <div class="container">
+        <div class="row">
+            <div class="card-panel">
+
+                <h4 class="center">Interview Requests</h4>
+
+                @if(flash.containsKey("success")) {
+                    <div class="card-panel green lighten-4 green-text text-darken-4">
+                        <i class="material-icons small">check_circle</i>
+                        @flash.get("success")
+                    </div>
+                }
+                @if(flash.containsKey("error")) {
+                    <div class="card-panel red lighten-4 red-text text-darken-4">
+                        <i class="material-icons small">error</i>
+                        @flash.get("error")
+                    </div>
+                }
+
+                @if(requests.isEmpty()) {
+                    <div class="center" style="padding: 40px 0;">
+                        <i class="material-icons large grey-text">event_busy</i>
+                        <p class="grey-text">No interview requests yet.</p>
+                    </div>
+                } else {
+                    <table class="striped responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Faculty</th>
+                                <th>Status</th>
+                                <th>Proposed Slots</th>
+                                <th>Accepted Slot</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(req <- requests.asScala) {
+                            <tr>
+                                <td>@req.getFacultyName()</td>
+                                <td>
+                                @req.getStatus() match {
+                                    case "PENDING"   => { <span class="badge orange white-text">PENDING</span> }
+                                    case "ACCEPTED"  => { <span class="badge green white-text">ACCEPTED</span> }
+                                    case "COUNTERED" => { <span class="badge blue white-text">COUNTER-OFFER</span> }
+                                    case "CONFIRMED" => { <span class="badge teal white-text">CONFIRMED</span> }
+                                    case "CANCELLED" => { <span class="badge red white-text">CANCELLED</span> }
+                                    case _           => { <span class="badge grey white-text">@req.getStatus()</span> }
+                                }
+                                </td>
+                                <td>
+                                    @if(req.getProposedSlot1() != null && !req.getProposedSlot1().isEmpty) {
+                                        <div><i class="material-icons tiny">schedule</i> @req.getProposedSlot1()</div>
+                                    }
+                                    @if(req.getProposedSlot2() != null && !req.getProposedSlot2().isEmpty) {
+                                        <div><i class="material-icons tiny">schedule</i> @req.getProposedSlot2()</div>
+                                    }
+                                    @if(req.getProposedSlot3() != null && !req.getProposedSlot3().isEmpty) {
+                                        <div><i class="material-icons tiny">schedule</i> @req.getProposedSlot3()</div>
+                                    }
+                                </td>
+                                <td>
+                                @if(req.getAcceptedSlot() != null && !req.getAcceptedSlot().isEmpty) {
+                                    <strong>@req.getAcceptedSlot()</strong>
+                                } else { - }
+                                </td>
+                                <td>@req.getCreateTime()</td>
+                                <td>
+                                    <a href="@routes.InterviewRequestController.interviewDetail(req.getId())"
+                                    class="btn-small blue waves-effect waves-light">
+                                        <i class="material-icons">visibility</i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+
+                <div class="row center" style="margin-top: 24px;">
+                @if(applicationId > 0) {
+                    <a href="@routes.RAJobController.rajobApplicationDetail(applicationId)"
+                    class="btn grey waves-effect waves-light">
+                        <i class="material-icons left">arrow_back</i>Back to Application
+                    </a>
+                } else {
+                    <a href="@routes.UserController.mySpacePage()"
+                    class="btn grey waves-effect waves-light">
+                        <i class="material-icons left">arrow_back</i>Back to My Space
+                    </a>
+                }
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
