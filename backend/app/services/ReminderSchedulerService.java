@@ -53,9 +53,9 @@ public class ReminderSchedulerService {
     private void startReminderScheduler() {
         Logger.info("Starting Interview Reminder Scheduler");
 
-        actorSystem.scheduler().scheduleAtFixedRate(
-                Duration.create(1, TimeUnit.MINUTES),  // initial delay
-                Duration.create(5, TimeUnit.MINUTES),  // interval
+        actorSystem.scheduler().schedule(
+                Duration.create(0, TimeUnit.SECONDS),
+                Duration.create(1, TimeUnit.HOURS),
                 () -> checkAndSendReminders(),
                 actorSystem.dispatcher()
         );
